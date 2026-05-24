@@ -56,6 +56,14 @@ Never commit:
 
 FTP deploy uses `server-dir: ./` when FTP user is chrooted to project root.
 
+### Production status after first push
+
+- GitHub repo and workflows are ready.
+- Local FTP upload of `config/db.php` from this machine failed with `530 Login incorrect` — verify FTP credentials in hosting panel and set GitHub secrets, then run:
+  1. `Deploy My to FTP` (on push to `main`)
+  2. `Setup My production runtime config` (manual workflow_dispatch)
+- After secrets + deploy: smoke test `/`, `/health`, `/assets/css/app.css` on `https://my.foxfamily.fun/`.
+
 ## ClickUp (deferred details)
 
 Target structure for all projects:
