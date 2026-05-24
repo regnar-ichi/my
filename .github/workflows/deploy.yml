@@ -1,0 +1,46 @@
+name: Deploy My to FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.MY_FTP_SERVER }}
+          username: ${{ secrets.MY_FTP_USERNAME }}
+          password: ${{ secrets.MY_FTP_PASSWORD }}
+          server-dir: ./
+          local-dir: ./
+          protocol: ftp
+          port: 21
+          security: loose
+          timeout: 190000
+          log-level: verbose
+          state-name: .ftp-deploy-sync-state.json
+          dry-run: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/.osp/**
+            .env
+            **/.env
+            config/db.php
+            **/config/db.php
+            **/storage/**
+            **/vendor/**
+            **/node_modules/**
+            **/*.sql.gz
+            **/*.dump
+            **/*.bak
+            **/*.tmp

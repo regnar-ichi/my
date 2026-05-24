@@ -1,0 +1,49 @@
+name: Setup My production runtime config
+
+on:
+  workflow_dispatch:
+
+jobs:
+  upload-db-config:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Upload production db.php
+        env:
+          FTP_SERVER: ${{ secrets.MY_FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.MY_FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.MY_FTP_PASSWORD }}
+          DB_PASSWORD: ${{ secrets.MY_DB_PASSWORD }}
+        run: |
+          python3 <<'PY'
+          import os
+          from ftplib import FTP
+          from io import BytesIO
+
+          password = os.environ['DB_PASSWORD']
+          lines = [
+              "<?php",
+              "",
+              "return [",
+              "    'host' => 'xy618515.mysql.tools',",
+              "    'database' => 'xy618515_my',",
+              "    'username' => 'xy618515_my',",
+              f"    'password' => {password!r},",
+              "    'port' => 3306,",
+              "    'charset' => 'utf8mb4',",
+              "];",
+              "",
+          ]
+          content = "\n".join(lines)
+
+          ftp = FTP(os.environ['FTP_SERVER'], timeout=120)
+          ftp.login(os.environ['FTP_USERNAME'], os.environ['FTP_PASSWORD'])
+          try:
+              ftp.mkd('config')
+          except Exception:
+              pass
+          ftp.cwd('config')
+          ftp.storbinary('STOR db.php', BytesIO(content.encode('utf-8')))
+          ftp.quit()
+          print('Uploaded config/db.php')
+          PY
