@@ -1,0 +1,22 @@
+# OSPanel
+.osp/
+
+# Local config and secrets
+.env
+config/db.php
+
+# Runtime data
+storage/logs/
+storage/cache/
+storage/backups/
+.ftp-deploy-sync-state.json
+
+# Dependencies
+vendor/
+node_modules/
+
+# Dumps and local artifacts
+*.sql.gz
+*.dump
+*.bak
+*.tmp

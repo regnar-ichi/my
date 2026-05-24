@@ -1,0 +1,10 @@
+<?php
+
+return [
+    'host' => 'MySQL-8.4',
+    'database' => 'my',
+    'username' => 'root',
+    'password' => '',
+    'port' => 3306,
+    'charset' => 'utf8mb4',
+];
